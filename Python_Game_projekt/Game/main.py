@@ -1,67 +1,50 @@
-import pygame
-
+import pygame, os, sys
+from Window import *
+from Player import *
 
 pygame.init()
 
-#Window fullscreen
-DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-#clock for timer and fps
+# Window position
+bg_position = {'x': 0, 'y': 0}  # Using a dictionary for background position
+
+# Window setup
+DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)  # fullscreen
+Main_Bg_Path = os.path.join("..", "Images", "Backgrounds", "Main_Bg.jpg")  # Background Img
+Main_Bg = pygame.image.load(Main_Bg_Path)  # Background load
+
+# clock for timer and fps
 clock = pygame.time.Clock()
 
-#player
-#player = pygame.image.load('player.png')
-player = pygame.Rect((300, 250, 50, 50))
+# Player setup
+player = pygame.Rect((100, 800, 50, 50))  # player position and size
+player_position = player
+player_speed = 5  # player speed
 
-player_speed = 5 #player speed
-player_gravity = 0 #player gravity
-
-
-#window loop
-#make the game in it
+# Game loop
 GameRun = True
 while GameRun:
+    # Draw window
+    Draw_Window(DISPLAYSURF, bg_position['x'], bg_position['y'], Main_Bg)
 
-    DISPLAYSURF.fill((0, 0, 0)) #background color
+    # Draw player
+    Draw_Player(player, DISPLAYSURF)
 
-    pygame.draw.rect(DISPLAYSURF, (255, 0, 0), player) #draw player
-
-    #player movement
     key = pygame.key.get_pressed()
-    if key[pygame.K_a]: #left with a
-        player.x -= player_speed
-    if key[pygame.K_d]: #right with d
-        player.x += player_speed
+    if key[pygame.K_a] or key[pygame.K_LEFT]:
+        bg_position = Player_Move_Left(player, player_speed, player_position, bg_position, key)
 
+    if key[pygame.K_d] or key[pygame.K_RIGHT]:
+        bg_position = Player_Move_Right(player, player_speed, player_position, bg_position, key)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # quit the game
+    # Quit the game
     for event in pygame.event.get():
-        #quit with close button
         if event.type == pygame.QUIT:
             pygame.quit()
-        #quit with escape button
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 GameRun = False
 
     pygame.display.update()
-    clock.tick(60)  # wait until next frame (at 60 FPS)
+    clock.tick(60)  # Wait until next frame (at 60 FPS)
+
 pygame.quit()
