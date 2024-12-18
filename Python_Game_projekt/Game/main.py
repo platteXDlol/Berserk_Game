@@ -21,10 +21,22 @@ Main_Bg = pygame.image.load(Main_Bg_Path)  # Background load
 Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Background scale fullscreen
 
 
+
+
+
 # Player setup
-player = pygame.Rect((100, screen_height * 0.862, screen_height * 0.0465, screen_height * 0.0465))  # player position and size
+
+player_posY = screen_height * 0.862
+player_width = screen_height * 0.0463
+player_height = screen_height * 0.0463
+
+player = pygame.Rect((100, player_posY, player_height, player_width))  # player position and size
 player_position = player
 player_speed = 5  # player speed
+
+# Ground setup
+ground_posY = screen_height * 0.862 + 55
+ground_height = player_posY + player_height
 
 
 
@@ -47,6 +59,12 @@ while GameRun:
     # Draw player
     Draw_Player(player, DISPLAYSURF)
 
+    # Draw ground
+    Draw_Ground(DISPLAYSURF, ground_posY, ground_height)
+
+    #Player wall collision
+    Player_Wall_Collision(player, ground_posY, player_height)
+
 
 
 
@@ -61,9 +79,23 @@ while GameRun:
 
 
 
-    # player collision
-    if player.colliderect(200, 875, 50, 100):
-        print('collision')
+
+
+
+
+# JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
+    if key[pygame.K_s] or key[pygame.K_DOWN]:
+        player.y += player_speed
+
+    if key[pygame.K_w] or key[pygame.K_UP]:
+        player.y -= player_speed
+# JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
 
 
 
@@ -86,13 +118,15 @@ while GameRun:
 
     # Quit the game
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
+        if event.type == pygame.QUIT: # If the close button is pressed
+            GameRun = False # Stop the game
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                GameRun = False
+            if event.key == pygame.K_ESCAPE: # If the escape key is pressed
+                GameRun = False # Stop the game
 
-    pygame.display.update()
+
+
+    pygame.display.update() # Update the display
     clock.tick(60)  # Wait until next frame (at 60 FPS)
 
-pygame.quit()
+pygame.quit() # Quit the game

@@ -30,3 +30,12 @@ def Player_Move_Left(player, player_speed, player_Postion, bg_position, key): #p
 
 
 
+
+# player wall collision
+def Player_Wall_Collision(player, ground_posY, player_height):
+    if player.colliderect(0, ground_posY, 1980, 200):
+        print('collision')
+        player.y = ground_posY - player_height
+
+
+
