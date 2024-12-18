@@ -22,7 +22,7 @@ Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Backg
 
 
 # Player setup
-player = pygame.Rect((100, 875, 50, 50))  # player position and size
+player = pygame.Rect((100, screen_height * 0.862, screen_height * 0.0465, screen_height * 0.0465))  # player position and size
 player_position = player
 player_speed = 5  # player speed
 
