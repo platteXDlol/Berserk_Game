@@ -16,7 +16,7 @@ bg_position = {'x': 0, 'y': 0}  # Background position dictionary
 
 # Window setup
 DISPLAYSURF = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)  # fullscreen
-Main_Bg_Path = os.path.join("Python_Game_projekt", "Images", "Backgrounds", "Main_Bg.jpg")  # Background Img
+Main_Bg_Path = os.path.join("Python_Game_projekt", "Images", "Backgrounds", "MainBackground.png")  # Background Img
 Main_Bg = pygame.image.load(Main_Bg_Path)  # Background load
 Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Background scale fullscreen
 
@@ -25,7 +25,7 @@ Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Backg
 
 
 # Player setup
-player_posY = screen_height * 0.862 - 500 # player position Y
+player_posY = screen_height * 0.9583 # player position Y
 player_width = screen_height * 0.0463 # player width
 player_height = screen_height * 0.0463 # player height
 
@@ -37,13 +37,17 @@ player_jump_count = 0 # player jump count
 
 
 player_gravity = 0   # player gravity
-increase_gravity = 0.25  # increase gravity
-jumpheight = -10 # jump height
+increase_gravity = screen_height / 1080 * 0.25  # increase gravity
+jumpheight = screen_height / 1080 * -10 # jump height
+
 
 
 # Ground setup
-ground_posY = screen_height * 0.862 + 55 # ground position Y
+ground_posY = screen_height * 0.9583 # ground position Y
 ground_height = player_posY + player_height # ground height
+
+# Platform setup
+platform_position_X = 0  # platform position X
 
 
 
@@ -79,7 +83,7 @@ while GameRun:
 
 
 
-    Draw_Level(DISPLAYSURF)
+    Draw_Level(DISPLAYSURF, screen_height, platform_position_X)
 
 
 
@@ -102,10 +106,10 @@ while GameRun:
     key = pygame.key.get_pressed()
 
     if key[pygame.K_a] or key[pygame.K_LEFT]:
-        bg_position = Player_Move_Left(player, player_speed, player_position, bg_position, key)
+        bg_position = Player_Move_Left(player, player_speed, player_position, bg_position, platform_position_X)
 
     if key[pygame.K_d] or key[pygame.K_RIGHT]:
-        bg_position = Player_Move_Right(player, player_speed, player_position, bg_position, key)
+        bg_position = Player_Move_Right(player, player_speed, player_position, bg_position, platform_position_X)
 
     if key[pygame.K_SPACE] or key[pygame.K_UP]:
         if player_jump_count == 0:

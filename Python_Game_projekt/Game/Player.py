@@ -12,22 +12,26 @@ def Draw_Player(player, DISPLAYSURF):
 
 
 #player move
-def Player_Move_Right(player, player_speed, player_Postion, bg_position, key): #player move right
+def Player_Move_Right(player, player_speed, player_Postion, bg_position, platform_position_X): #player move right
     player.x += player_speed
     if player_Postion.x > 500:  # player position start Bg move
         player.x = 500  # player stop move
         bg_position['x'] -= player_speed  # background move
+        platform_position_X -= player_speed  # platform move
     return bg_position # return background position
+    return platform_position_X # return platform position
 
 
-def Player_Move_Left(player, player_speed, player_Postion, bg_position, key): #player move left
+def Player_Move_Left(player, player_speed, player_Postion, bg_position, platform_position_X): #player move left
     player.x -= player_speed
     if bg_position['x'] < 0: # if Bg position is less than 0 (player is far right) -->  if greater than 0 player can move left
         player.x = 500  # player dont move
         bg_position['x'] += player_speed # background move
+        platform_position_X -= player_speed  # platform move
     if player_Postion.x < 5: # player dont move out screen
         player.x = 5
     return bg_position # return background position
+    return platform_position_X # return platform position
 
 
 
