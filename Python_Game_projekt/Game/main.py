@@ -25,18 +25,25 @@ Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Backg
 
 
 # Player setup
+player_posY = screen_height * 0.862 - 500 # player position Y
+player_width = screen_height * 0.0463 # player width
+player_height = screen_height * 0.0463 # player height
 
-player_posY = screen_height * 0.862
-player_width = screen_height * 0.0463
-player_height = screen_height * 0.0463
 
 player = pygame.Rect((100, player_posY, player_height, player_width))  # player position and size
 player_position = player
 player_speed = 5  # player speed
+player_jump_count = 0 # player jump count
+
+
+player_gravity = 0   # player gravity
+increase_gravity = 0.25  # increase gravity
+jumpheight = -10 # jump height
+
 
 # Ground setup
-ground_posY = screen_height * 0.862 + 55
-ground_height = player_posY + player_height
+ground_posY = screen_height * 0.862 + 55 # ground position Y
+ground_height = player_posY + player_height # ground height
 
 
 
@@ -53,42 +60,76 @@ GameRun = True
 while GameRun:
 
 
+    # Draw ground
+    Draw_Ground(DISPLAYSURF, ground_posY, ground_height)
+
     # Draw window
     Draw_Window(DISPLAYSURF, bg_position['x'], bg_position['y'], Main_Bg)
 
     # Draw player
     Draw_Player(player, DISPLAYSURF)
 
-    # Draw ground
-    Draw_Ground(DISPLAYSURF, ground_posY, ground_height)
+
+
 
     #Player wall collision
-    Player_Wall_Collision(player, ground_posY, player_height)
+    player_gravity += increase_gravity  # Gravity
+    player_jump_count = Player_Wall_Collision(player, ground_posY, player_height, player_jump_count)
+    player_gravity, player_jump_count = Player_Gravity(player_gravity, player, ground_posY, player_height, player_jump_count)
+
+
+
+    Draw_Level(DISPLAYSURF)
 
 
 
 
-#player input
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #player input
     # Player move
     key = pygame.key.get_pressed()
+
     if key[pygame.K_a] or key[pygame.K_LEFT]:
         bg_position = Player_Move_Left(player, player_speed, player_position, bg_position, key)
 
     if key[pygame.K_d] or key[pygame.K_RIGHT]:
         bg_position = Player_Move_Right(player, player_speed, player_position, bg_position, key)
 
+    if key[pygame.K_SPACE] or key[pygame.K_UP]:
+        if player_jump_count == 0:
+            player_gravity = jumpheight  # Jump height
+            player_jump_count = 1  # Increase jump count
+        print(f"Player Y: {player.y}, Gravity: {player_gravity}")
 
 
 
 
 
 
-# JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+    # JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
     if key[pygame.K_s] or key[pygame.K_DOWN]:
         player.y += player_speed
 
-    if key[pygame.K_w] or key[pygame.K_UP]:
-        player.y -= player_speed
 # JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
 
 

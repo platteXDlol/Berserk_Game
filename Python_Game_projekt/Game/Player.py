@@ -1,4 +1,5 @@
 ﻿import pygame, os, sys
+
 from Window import *
 
 
@@ -32,10 +33,29 @@ def Player_Move_Left(player, player_speed, player_Postion, bg_position, key): #p
 
 
 # player wall collision
-def Player_Wall_Collision(player, ground_posY, player_height):
-    if player.colliderect(0, ground_posY, 1980, 200):
-        print('collision')
+def Player_Wall_Collision(player, ground_posY, player_height, player_jump_count):
+    if player.y >= ground_posY - player_height:
         player.y = ground_posY - player_height
+        player_jump_count = 0  # Reset jump count when player hits the ground
+    return player_jump_count
+
+
+
+
+
+
+
+# player gravity
+def Player_Gravity(player_gravity, player, ground_posY, player_height, player_jump_count):
+    player.y += player_gravity
+    if player.y >= ground_posY - player_height:  # Collision with ground
+        player.y = ground_posY - player_height  # Teleport to ground
+        player_gravity = 0  # Gravity stops when on the ground
+        player_jump_count = 0  # Reset jump count when on the ground
+    return player_gravity, player_jump_count  # Return both gravity and jump count
+
+
+
 
 
 
