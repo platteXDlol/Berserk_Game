@@ -1,6 +1,7 @@
 import pygame, os, sys
 from Window import *
 from Player import *
+from Level import *
 
 pygame.init()
 
@@ -12,7 +13,8 @@ info = pygame.display.Info() # Get screen info
 screen_width, screen_height = info.current_w, info.current_h # set screen width and height
 
 # Background position
-bg_position = {'x': 0, 'y': 0}  # Background position dictionary
+# Platform position
+bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X' : 0}  # Background and Platform position dictionary
 
 # Window setup
 DISPLAYSURF = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)  # fullscreen
@@ -25,6 +27,7 @@ Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Backg
 
 
 # Player setup
+player_live = 1 # player live
 player_posY = screen_height * 0.9583 # player position Y
 player_width = screen_height * 0.0463 # player width
 player_height = screen_height * 0.0463 # player height
@@ -37,8 +40,8 @@ player_jump_count = 0 # player jump count
 
 
 player_gravity = 0   # player gravity
-increase_gravity = screen_height / 1080 * 0.25  # increase gravity
-jumpheight = screen_height / 1080 * -10 # jump height
+increase_gravity = screen_height / 1080 * 0.4  # increase gravity
+jumpheight = screen_height / 1080 * -12.65 # jump height
 
 
 
@@ -47,7 +50,15 @@ ground_posY = screen_height * 0.9583 # ground position Y
 ground_height = player_posY + player_height # ground height
 
 # Platform setup
-platform_position_X = 0  # platform position X
+platform = []
+triangles = []
+
+# Spickes
+Spickes_path = os.path.join("Python_Game_projekt", "Images", "World", "Spike2.png")  # Spickes Img
+Spickes_img = pygame.image.load(Spickes_path)  # Spickes load
+Spickes_img = pygame.transform.scale(Spickes_img, (screen_width * (50 / 1920), screen_height *(50 / 1080))) # Spickes scale
+
+
 
 
 
@@ -68,32 +79,25 @@ while GameRun:
     Draw_Ground(DISPLAYSURF, ground_posY, ground_height)
 
     # Draw window
-    Draw_Window(DISPLAYSURF, bg_position['x'], bg_position['y'], Main_Bg)
+    Draw_Window(DISPLAYSURF, bg_pf_position['x'], bg_pf_position['y'], Main_Bg)
 
     # Draw player
     Draw_Player(player, DISPLAYSURF)
 
 
 
-
     #Player wall collision
     player_gravity += increase_gravity  # Gravity
-    player_jump_count = Player_Wall_Collision(player, ground_posY, player_height, player_jump_count)
     player_gravity, player_jump_count = Player_Gravity(player_gravity, player, ground_posY, player_height, player_jump_count)
 
 
+    #player platform collision
+    platforms = Draw_Platforms(DISPLAYSURF, screen_height, screen_width, bg_pf_position['platform_position_X'])
+    player_gravity, player_jump_count = Player_Platform_Collision(player, player_height, platforms, player_gravity, player_jump_count)
 
-    Draw_Level(DISPLAYSURF, screen_height, platform_position_X)
-
-
-
-
-
-
-
-
-
-
+    #player triangle collision
+    triangles = Draw_Triangle(DISPLAYSURF, ground_posY, screen_width, screen_height, bg_pf_position['triangle_position_X'], Spickes_img)
+    #player_live = Player_Triangle_Collision(player, triangles, player_live)
 
 
 
@@ -105,17 +109,27 @@ while GameRun:
     # Player move
     key = pygame.key.get_pressed()
 
+
     if key[pygame.K_a] or key[pygame.K_LEFT]:
-        bg_position = Player_Move_Left(player, player_speed, player_position, bg_position, platform_position_X)
+        bg_pf_position = Player_Move_Left(player, player_speed, player_position, bg_pf_position)
+        if key[pygame.K_LSHIFT]:  # Sprint
+            player_speed = 20
+        else:
+            player_speed = 5
+
 
     if key[pygame.K_d] or key[pygame.K_RIGHT]:
-        bg_position = Player_Move_Right(player, player_speed, player_position, bg_position, platform_position_X)
+        bg_pf_position = Player_Move_Right(player, player_speed, player_position, bg_pf_position)
+        if key[pygame.K_LSHIFT]:  # Sprint
+            player_speed = 20
+        else:
+            player_speed = 5
 
-    if key[pygame.K_SPACE] or key[pygame.K_UP]:
+
+    if key[pygame.K_SPACE]:      #or key[pygame.K_UP]:
         if player_jump_count == 0:
             player_gravity = jumpheight  # Jump height
             player_jump_count = 1  # Increase jump count
-        print(f"Player Y: {player.y}, Gravity: {player_gravity}")
 
 
 
@@ -130,9 +144,10 @@ while GameRun:
 
 
 
-    # JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
-    if key[pygame.K_s] or key[pygame.K_DOWN]:
-        player.y += player_speed
+
+# JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
+    if key[pygame.K_s] or key[pygame.K_UP]:
+        player.y -= 100
 
 # JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
 
@@ -148,17 +163,9 @@ while GameRun:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+# Player die
+    if player_live == 0:
+        GameRun = False
 
 
     # Quit the game
