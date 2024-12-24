@@ -7,8 +7,8 @@ from Window import *
 
 
 #player draw
-def Draw_Player(player, DISPLAYSURF):
-    pygame.draw.rect(DISPLAYSURF, (255, 0, 0), player) #draw player
+def Draw_Player(player, player_image, DISPLAYSURF, player_mask, mask_image):
+    DISPLAYSURF.blit(player_image, (player.x, player.y))  # Draw player
 
 
 
@@ -34,6 +34,17 @@ def Player_Move_Left(player, player_speed, player_Postion, bg_position,): #playe
         player.x = 5
     return bg_position
 
+def Player_dash(dash_speed, bg_position, key):  # player
+    if key[pygame.K_a] or key[pygame.K_LEFT]:  # Dash left
+        bg_position['x'] += dash_speed
+        bg_position['platform_position_X'] += dash_speed
+        bg_position['triangle_position_X'] += dash_speed
+    elif key[pygame.K_d] or key[pygame.K_RIGHT]:  # Dash right
+        bg_position['x'] -= dash_speed
+        bg_position['platform_position_X'] -= dash_speed
+        bg_position['triangle_position_X'] -= dash_speed
+    return bg_position
+
 
 
 
@@ -56,11 +67,23 @@ def Player_Platform_Collision(player, player_height, platforms, player_gravity, 
     return player_gravity, player_jump_count # Return both gravity and jump count
 
 
+
+
 # player triangle collision
+#ChatGPT __________
+def check_triangle_collision(player, player_mask, player_live, triangle_mask_positions, player_width):
+    for triangle in triangle_mask_positions:
+        triangle_mask = triangle['mask']  # Get the mask for the triangle
+        triangle_pos = triangle['pos']   # Get the position of the triangle
 
+        # Calculate the relative offset between the player and the triangle
+        offset = (player.x + (player_width/2) - triangle_pos[0], player.y + (player_width/2) - triangle_pos[1])
 
-
-
+        # Check if the player's mask overlaps with the triangle's mask
+        if player_mask.overlap(triangle_mask, offset):
+            player_live -= 1  # Decrease player's lives
+            # Reset player position (modify based on your reset logic)
+    return player_live
 
 
 # player gravity

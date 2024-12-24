@@ -62,29 +62,55 @@ def Draw_Platforms(DISPLAYSURF, screen_height, screen_width, platform_position_X
 
 
 
-import pygame
+
 
 def Draw_Triangle(DISPLAYSURF, ground_posY, screen_width, screen_height, triangle_position_X, Spickes_img):
-    # Adjust the triangle's X positions as a percentage of the screen width
-    TriangleX = [
-        triangle_position_X + screen_width * 0.3,  # 30% of screen width
-        triangle_position_X + screen_width * 0.4,  # 40% of screen width
-        triangle_position_X + screen_width * 0.5   # 50% of screen width
+    # Define triangle positions
+    triangle_X = [
+        triangle_position_X + 1000,
+        triangle_position_X + 1500,
+        triangle_position_X + 2100,
+        triangle_position_X + 2500,
+        triangle_position_X + 3100,  # 5
+        triangle_position_X + 3500,
+        triangle_position_X + 5400,
+        triangle_position_X + 6200
     ]
 
-    TriangleY = ground_posY
+    triangle_Y = [
+        ground_posY - Spickes_img.get_height(),  # Place the spike top at ground level
+        ground_posY - Spickes_img.get_height(),
+        ground_posY - Spickes_img.get_height(),
+        ground_posY - Spickes_img.get_height(),
+        ground_posY - Spickes_img.get_height(),  # 5
+        ground_posY - Spickes_img.get_height(),
+        ground_posY - Spickes_img.get_height(),
+        ground_posY - Spickes_img.get_height()
+    ]
 
-
+    # Create triangle Rects
     triangles = [
-        ((TriangleX[i], TriangleY  * 0.978703703704))  # 97.8703703704% of screen height
-        for i in range(len(TriangleX))
+        pygame.Rect(triangle_X[i], triangle_Y[i], Spickes_img.get_width(), Spickes_img.get_height())
+        for i in range(len(triangle_X))
     ]
 
-    # Blit the image at the triangle positions
-    for triangle_top in triangles:
-        DISPLAYSURF.blit(Spickes_img, (triangle_top[0] - Spickes_img.get_width() // 2, triangle_top[1] - Spickes_img.get_height() // 2))
+    # Draw each triangle image
+    for triangle in triangles:
+        DISPLAYSURF.blit(Spickes_img, (triangle.x, triangle.y))
 
-    return triangles
+    # Create triangle masks
+    triangle_masks = [
+        pygame.mask.from_surface(Spickes_img)  # Generate a mask from the spike image
+        for _ in range(len(triangle_X))
+    ]
+
+    # Adjust masks to triangle positions
+    triangle_mask_positions = [
+        {'mask': triangle_masks[i], 'pos': (triangle_X[i], triangle_Y[i])}
+        for i in range(len(triangles))
+    ]
+
+    return triangle_mask_positions  # Return mask with positions
 
 
 

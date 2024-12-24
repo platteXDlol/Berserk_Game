@@ -28,14 +28,23 @@ Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Backg
 
 # Player setup
 player_live = 1 # player live
-player_posY = screen_height * 0.9583 # player position Y
-player_width = screen_height * 0.0463 # player width
-player_height = screen_height * 0.0463 # player height
+player_posY = screen_height# player position Y
+scaling_factor = 2.5  # Increase player size by 50%
+player_width = int(screen_height * 0.0463 * scaling_factor)  # Player width
+player_height = int(screen_height * 0.0463 * scaling_factor)  # Player height
 
 
-player = pygame.Rect((100, player_posY, player_height, player_width))  # player position and size
-player_position = player
+# Player image
+player_image = pygame.image.load(os.path.join("Python_Game_projekt", "Images", "Charakters", "Guts.png"))  # player Img
+player_image = pygame.transform.scale(player_image, (int(player_width), int(player_height))) # player scale
+
+player_rect = player_image.get_rect(topleft=(100, player_posY))  # player position
+player_mask = pygame.mask.from_surface(player_image)  # player mask
+mask_image = player_mask.to_surface()  # mask image
+
+player_position = player_rect  # player position
 player_speed = 5  # player speed
+dash_speed = 15
 player_jump_count = 0 # player jump count
 
 
@@ -82,22 +91,22 @@ while GameRun:
     Draw_Window(DISPLAYSURF, bg_pf_position['x'], bg_pf_position['y'], Main_Bg)
 
     # Draw player
-    Draw_Player(player, DISPLAYSURF)
+    Draw_Player(player_rect, player_image, DISPLAYSURF, player_mask, mask_image)
 
 
 
     #Player wall collision
     player_gravity += increase_gravity  # Gravity
-    player_gravity, player_jump_count = Player_Gravity(player_gravity, player, ground_posY, player_height, player_jump_count)
+    player_gravity, player_jump_count = Player_Gravity(player_gravity, player_rect, ground_posY, player_height, player_jump_count)
 
 
     #player platform collision
     platforms = Draw_Platforms(DISPLAYSURF, screen_height, screen_width, bg_pf_position['platform_position_X'])
-    player_gravity, player_jump_count = Player_Platform_Collision(player, player_height, platforms, player_gravity, player_jump_count)
+    player_gravity, player_jump_count = Player_Platform_Collision(player_rect, player_height, platforms, player_gravity, player_jump_count)
 
     #player triangle collision
-    triangles = Draw_Triangle(DISPLAYSURF, ground_posY, screen_width, screen_height, bg_pf_position['triangle_position_X'], Spickes_img)
-    #player_live = Player_Triangle_Collision(player, triangles, player_live)
+    triangle_mask_positions = Draw_Triangle(DISPLAYSURF, ground_posY, screen_width, screen_height, bg_pf_position['triangle_position_X'], Spickes_img)
+    player_live = check_triangle_collision(player_rect, player_mask, player_live, triangle_mask_positions, player_width)
 
 
 
@@ -111,7 +120,7 @@ while GameRun:
 
 
     if key[pygame.K_a] or key[pygame.K_LEFT]:
-        bg_pf_position = Player_Move_Left(player, player_speed, player_position, bg_pf_position)
+        bg_pf_position = Player_Move_Left(player_rect, player_speed, player_position, bg_pf_position)
         if key[pygame.K_LSHIFT]:  # Sprint
             player_speed = 20
         else:
@@ -119,7 +128,7 @@ while GameRun:
 
 
     if key[pygame.K_d] or key[pygame.K_RIGHT]:
-        bg_pf_position = Player_Move_Right(player, player_speed, player_position, bg_pf_position)
+        bg_pf_position = Player_Move_Right(player_rect, player_speed, player_position, bg_pf_position)
         if key[pygame.K_LSHIFT]:  # Sprint
             player_speed = 20
         else:
@@ -130,6 +139,11 @@ while GameRun:
         if player_jump_count == 0:
             player_gravity = jumpheight  # Jump height
             player_jump_count = 1  # Increase jump count
+
+    if key[pygame.K_LCTRL] and key[pygame.K_SPACE]:
+        Player_dash(dash_speed, bg_pf_position, key)
+
+
 
 
 
@@ -147,7 +161,7 @@ while GameRun:
 
 # JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
     if key[pygame.K_s] or key[pygame.K_UP]:
-        player.y -= 100
+        player_rect.y -= 100
 
 # JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
 
