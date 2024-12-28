@@ -22,8 +22,7 @@ Main_Bg_Path = os.path.join("Python_Game_projekt", "Images", "Backgrounds", "Mai
 Main_Bg = pygame.image.load(Main_Bg_Path)  # Background load
 Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Background scale fullscreen
 
-
-
+level_length = Main_Bg.get_width() * 14  # Level length
 
 
 # Player setup
@@ -120,7 +119,7 @@ while GameRun:
 
 
     if key[pygame.K_a] or key[pygame.K_LEFT]:
-        bg_pf_position = Player_Move_Left(player_rect, player_speed, player_position, bg_pf_position)
+        bg_pf_position = Player_Move_Left(player_rect, player_speed, player_position, bg_pf_position, level_length)
         if key[pygame.K_LSHIFT]:  # Sprint
             player_speed = 20
         else:
@@ -128,7 +127,7 @@ while GameRun:
 
 
     if key[pygame.K_d] or key[pygame.K_RIGHT]:
-        bg_pf_position = Player_Move_Right(player_rect, player_speed, player_position, bg_pf_position)
+        bg_pf_position = Player_Move_Right(player_rect, player_speed, player_position, bg_pf_position, level_length, screen_width, player_width)
         if key[pygame.K_LSHIFT]:  # Sprint
             player_speed = 20
         else:
@@ -136,12 +135,15 @@ while GameRun:
 
 
     if key[pygame.K_SPACE]:      #or key[pygame.K_UP]:
-        if player_jump_count == 0:
+        if player_jump_count == 0:  # If player is on the ground
             player_gravity = jumpheight  # Jump height
             player_jump_count = 1  # Increase jump count
 
-    if key[pygame.K_LCTRL] and key[pygame.K_SPACE]:
-        Player_dash(dash_speed, bg_pf_position, key)
+
+
+
+
+
 
 
 

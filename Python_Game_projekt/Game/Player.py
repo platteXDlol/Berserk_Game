@@ -13,37 +13,30 @@ def Draw_Player(player, player_image, DISPLAYSURF, player_mask, mask_image):
 
 
 #player move
-def Player_Move_Right(player, player_speed, player_Postion, bg_position): #player move right
+def Player_Move_Right(player, player_speed, player_Postion, bg_position, level_length, screen_width, player_width): #player move right
     player.x += player_speed
-    if player_Postion.x > 500:  # player position start Bg move
+    if player_Postion.x > 500 and bg_position['x'] > -level_length:  # player position start Bg move
         player.x = 500  # player stop move
         bg_position['x'] -= player_speed  # background move
         bg_position['platform_position_X'] -= player_speed  # platform move
         bg_position['triangle_position_X'] -= player_speed  # triangle move
+    if player_Postion.x > screen_width - player_width - 5:  # dont move out screen
+        player.x = screen_width - player_width - 5
     return bg_position
 
 
-def Player_Move_Left(player, player_speed, player_Postion, bg_position,): #player move left
+def Player_Move_Left(player, player_speed, player_Postion, bg_position, level_length): #player move left
     player.x -= player_speed
-    if bg_position['x'] < 0: # if Bg position is less than 0 (player is far right) -->  if greater than 0 player can move left
+    if bg_position['x'] < 0 and bg_position['x'] > -level_length or player.x < 500 and  bg_position['x'] <0: # if Bg position is less than 0 (player is far right) -->  if greater than 0 player can move left
         player.x = 500  # player dont move
         bg_position['x'] += player_speed # background move
         bg_position['platform_position_X'] += player_speed # platform move
         bg_position['triangle_position_X'] += player_speed # triangle move
-    if player_Postion.x < 5: # player dont move out screen
+    if player_Postion.x < 5: #dont move out screen
         player.x = 5
     return bg_position
 
-def Player_dash(dash_speed, bg_position, key):  # player
-    if key[pygame.K_a] or key[pygame.K_LEFT]:  # Dash left
-        bg_position['x'] += dash_speed
-        bg_position['platform_position_X'] += dash_speed
-        bg_position['triangle_position_X'] += dash_speed
-    elif key[pygame.K_d] or key[pygame.K_RIGHT]:  # Dash right
-        bg_position['x'] -= dash_speed
-        bg_position['platform_position_X'] -= dash_speed
-        bg_position['triangle_position_X'] -= dash_speed
-    return bg_position
+
 
 
 
