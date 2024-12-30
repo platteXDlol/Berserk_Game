@@ -2,8 +2,11 @@ import pygame, os, sys
 from Window import *
 from Player import *
 from Level import *
+from Retry_Lose_Screen import *
 
 pygame.init()
+
+
 
 # clock for timer and fps
 clock = pygame.time.Clock()
@@ -21,6 +24,11 @@ DISPLAYSURF = pygame.display.set_mode((screen_width, screen_height), pygame.FULL
 Main_Bg_Path = os.path.join("Python_Game_projekt", "Images", "Backgrounds", "MainBackground.png")  # Background Img
 Main_Bg = pygame.image.load(Main_Bg_Path)  # Background load
 Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Background scale fullscreen
+
+# Level End setup
+End_Bg_Path = os.path.join("Python_Game_projekt", "Images", "Backgrounds", "MainBackground_End.png")  # End Background Img
+End_Bg = pygame.image.load(End_Bg_Path)  # End Background load
+End_Bg = pygame.transform.scale(End_Bg, (screen_width, screen_height)) # End Background scale fullscreen
 
 level_length = Main_Bg.get_width() * 14  # Level length
 
@@ -87,7 +95,7 @@ while GameRun:
     Draw_Ground(DISPLAYSURF, ground_posY, ground_height)
 
     # Draw window
-    Draw_Window(DISPLAYSURF, bg_pf_position['x'], bg_pf_position['y'], Main_Bg)
+    Draw_Window(DISPLAYSURF, bg_pf_position['x'], bg_pf_position['y'], Main_Bg, End_Bg)
 
     # Draw player
     Draw_Player(player_rect, player_image, DISPLAYSURF, player_mask, mask_image)
@@ -109,6 +117,20 @@ while GameRun:
 
 
 
+    #player dead
+    if player_live == 0:
+        Retry(DISPLAYSURF, Main_Bg, screen_width, screen_height, clock)
+        player_live = 1
+        player_rect = player_image.get_rect(topleft=(100, player_posY))
+        player_position = player_rect
+        player_gravity = 0
+        player_jump_count = 0
+        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0}
+
+
+
+
+
 
 
 
@@ -119,14 +141,18 @@ while GameRun:
 
 
     if key[pygame.K_a] or key[pygame.K_LEFT]:
+        if player_position.x > screen_width / 100 * 50:
+            player_speed = 5 # end of game
         bg_pf_position = Player_Move_Left(player_rect, player_speed, player_position, bg_pf_position, level_length)
         if key[pygame.K_LSHIFT]:  # Sprint
             player_speed = 20
         else:
             player_speed = 5
 
-
+      
     if key[pygame.K_d] or key[pygame.K_RIGHT]:
+        if player_position.x > screen_width / 100 * 50: # end of game
+            player_speed = 5
         bg_pf_position = Player_Move_Right(player_rect, player_speed, player_position, bg_pf_position, level_length, screen_width, player_width)
         if key[pygame.K_LSHIFT]:  # Sprint
             player_speed = 20
@@ -135,6 +161,8 @@ while GameRun:
 
 
     if key[pygame.K_SPACE]:      #or key[pygame.K_UP]:
+        if player_position.x > screen_width / 100 * 50: # end of game
+            player_jump_count = 1
         if player_jump_count == 0:  # If player is on the ground
             player_gravity = jumpheight  # Jump height
             player_jump_count = 1  # Increase jump count
@@ -165,6 +193,9 @@ while GameRun:
     if key[pygame.K_s] or key[pygame.K_UP]:
         player_rect.y -= 100
 
+
+    print(clock)
+
 # JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -179,9 +210,7 @@ while GameRun:
 
 
 
-# Player die
-    if player_live == 0:
-        GameRun = False
+
 
 
     # Quit the game
