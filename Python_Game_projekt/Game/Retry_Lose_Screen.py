@@ -2,7 +2,6 @@
 
 def Retry(DISPLAYSURF, Main_Bg, screen_width, screen_height, clock):
     GameOver = True
-    player_live = 1
     while GameOver == True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -3,13 +3,10 @@ from Window import *
 from Player import *
 from Level import *
 from Retry_Lose_Screen import *
+from End_Screen import *
 
 pygame.init()
 
-
-
-# clock for timer and fps
-clock = pygame.time.Clock()
 
 os.environ['SDL_VIDEO_CENTERED'] = '1' # Center the window
 info = pygame.display.Info() # Get screen info
@@ -79,8 +76,10 @@ Spickes_img = pygame.transform.scale(Spickes_img, (screen_width * (50 / 1920), s
 
 
 
+# Clock and Start Timer
 
-
+clock = pygame.time.Clock() # clock for timer and fps
+start_time = pygame.time.get_ticks() # start time
 
 
 
@@ -90,6 +89,8 @@ Spickes_img = pygame.transform.scale(Spickes_img, (screen_width * (50 / 1920), s
 GameRun = True
 while GameRun:
 
+    # Calculate elapsed time
+    elapsed_time = (pygame.time.get_ticks() - start_time) // 1000  # seconds
 
     # Draw ground
     Draw_Ground(DISPLAYSURF, ground_posY, ground_height)
@@ -119,7 +120,8 @@ while GameRun:
 
     #player dead
     if player_live == 0:
-        Retry(DISPLAYSURF, Main_Bg, screen_width, screen_height, clock)
+        #Retry(DISPLAYSURF, Main_Bg, screen_width, screen_height, clock)
+        End_Screen(DISPLAYSURF, screen_width, screen_height, clock, elapsed_time)
         player_live = 1
         player_rect = player_image.get_rect(topleft=(100, player_posY))
         player_position = player_rect
@@ -194,7 +196,6 @@ while GameRun:
         player_rect.y -= 100
 
 
-    print(clock)
 
 # JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------
 
