@@ -17,9 +17,6 @@ def Draw_Ground(DisplaySurf, ground_posY, ground_height):
     pygame.draw.rect(DisplaySurf, (255, 255, 0), (0, ground_posY, 1980, 200))
 
 
-def Draw_End():
-    pass
-
 
 
 

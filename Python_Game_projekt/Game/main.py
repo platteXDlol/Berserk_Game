@@ -14,7 +14,7 @@ screen_width, screen_height = info.current_w, info.current_h # set screen width 
 
 # Background position
 # Platform position
-bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X' : 0}  # Background and Platform position dictionary
+bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X' : 0, 'end_rect_position_X' : 0}  # Background and Platform position dictionary
 
 # Window setup
 DISPLAYSURF = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)  # fullscreen
@@ -103,6 +103,8 @@ while GameRun:
 
 
 
+
+
     #Player wall collision
     player_gravity += increase_gravity  # Gravity
     player_gravity, player_jump_count = Player_Gravity(player_gravity, player_rect, ground_posY, player_height, player_jump_count)
@@ -120,19 +122,31 @@ while GameRun:
 
     #player dead
     if player_live == 0:
-        #Retry(DISPLAYSURF, Main_Bg, screen_width, screen_height, clock)
-        End_Screen(DISPLAYSURF, screen_width, screen_height, clock, elapsed_time)
+        Retry(DISPLAYSURF, Main_Bg, screen_width, screen_height, clock)
         player_live = 1
         player_rect = player_image.get_rect(topleft=(100, player_posY))
         player_position = player_rect
         player_gravity = 0
         player_jump_count = 0
-        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0}
+        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0}
+        start_time = pygame.time.get_ticks()  # Reset start time
 
 
 
 
 
+
+    # Draw End Block
+    end_rect_position = End_Block_Draw(DISPLAYSURF, screen_width, screen_height, level_length, bg_pf_position['end_rect_position_X'])
+    if player_rect.colliderect(end_rect_position): # Check if player collides with the end block
+        End_Screen(DISPLAYSURF, screen_width, screen_height, clock, elapsed_time)  # Display the end screen
+        player_live = 1
+        player_rect = player_image.get_rect(topleft=(100, player_posY))
+        player_position = player_rect
+        player_gravity = 0
+        player_jump_count = 0
+        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0}
+        start_time = pygame.time.get_ticks()  # Reset start time
 
 
 
@@ -147,7 +161,7 @@ while GameRun:
             player_speed = 5 # end of game
         bg_pf_position = Player_Move_Left(player_rect, player_speed, player_position, bg_pf_position, level_length)
         if key[pygame.K_LSHIFT]:  # Sprint
-            player_speed = 20
+            player_speed = 50
         else:
             player_speed = 5
 
@@ -157,7 +171,7 @@ while GameRun:
             player_speed = 5
         bg_pf_position = Player_Move_Right(player_rect, player_speed, player_position, bg_pf_position, level_length, screen_width, player_width)
         if key[pygame.K_LSHIFT]:  # Sprint
-            player_speed = 20
+            player_speed = 50
         else:
             player_speed = 5
 
