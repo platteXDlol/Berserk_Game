@@ -47,8 +47,7 @@ player_mask = pygame.mask.from_surface(player_image)  # player mask
 mask_image = player_mask.to_surface()  # mask image
 
 player_position = player_rect  # player position
-player_speed = 5  # player speed
-dash_speed = 15
+player_speed = 15  # player speed
 player_jump_count = 0 # player jump count
 
 
@@ -115,7 +114,7 @@ while GameRun:
     player_gravity, player_jump_count = Player_Platform_Collision(player_rect, player_height, platforms, player_gravity, player_jump_count)
 
     #player triangle collision
-    triangle_mask_positions = Draw_Triangle(DISPLAYSURF, ground_posY, screen_width, screen_height, bg_pf_position['triangle_position_X'], Spickes_img)
+    triangle_mask_positions = Draw_Spikes(DISPLAYSURF, ground_posY, screen_width, screen_height, bg_pf_position['triangle_position_X'], Spickes_img)
     player_live = check_triangle_collision(player_rect, player_mask, player_live, triangle_mask_positions, player_width)
 
 
@@ -160,20 +159,14 @@ while GameRun:
         if player_position.x > screen_width / 100 * 50:
             player_speed = 5 # end of game
         bg_pf_position = Player_Move_Left(player_rect, player_speed, player_position, bg_pf_position, level_length)
-        if key[pygame.K_LSHIFT]:  # Sprint
-            player_speed = 50
-        else:
-            player_speed = 5
+
 
       
     if key[pygame.K_d] or key[pygame.K_RIGHT]:
         if player_position.x > screen_width / 100 * 50: # end of game
             player_speed = 5
         bg_pf_position = Player_Move_Right(player_rect, player_speed, player_position, bg_pf_position, level_length, screen_width, player_width)
-        if key[pygame.K_LSHIFT]:  # Sprint
-            player_speed = 50
-        else:
-            player_speed = 5
+
 
 
     if key[pygame.K_SPACE]:      #or key[pygame.K_UP]:
