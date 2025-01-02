@@ -1,6 +1,6 @@
 ﻿import pygame
 
-def Retry(DISPLAYSURF, Main_Bg, screen_width, screen_height, clock):
+def Retry(DISPLAYSURF, screen_width, screen_height, clock):
     GameOver = True
     while GameOver == True:
         for event in pygame.event.get():
@@ -13,6 +13,8 @@ def Retry(DISPLAYSURF, Main_Bg, screen_width, screen_height, clock):
                     exit()
                 elif event.key == pygame.K_r:
                     GameOver = False
+
+
 
         DISPLAYSURF.fill((0, 0, 0))
         font = pygame.font.Font(None, 74)

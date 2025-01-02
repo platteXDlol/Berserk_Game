@@ -13,17 +13,18 @@ def Draw_Player(player, player_image, DISPLAYSURF, player_mask, mask_image):
 
 
 #player move
-def Player_Move_Right(player, player_speed, player_Postion, bg_position, level_length, screen_width, player_width): #player move right
+def Player_Move_Right(player, player_speed, player_Position, bg_position, level_length, screen_width, player_width):
     player.x += player_speed
-    if player_Postion.x > 500 and bg_position['x'] > -level_length:  # player position start Bg move
-        player.x = 500  # player stop move
-        bg_position['x'] -= player_speed  # background move
-        bg_position['platform_position_X'] -= player_speed  # platform move
-        bg_position['triangle_position_X'] -= player_speed  # triangle move
-        bg_position['end_rect_position_X'] -= player_speed  # end block move
-    if player_Postion.x > screen_width - player_width - 5:  # dont move out screen
+    if player_Position.x > 500 and bg_position['x'] > -level_length:  # Background moves after player crosses certain threshold
+        player.x = 500  # Stop player move
+        bg_position['x'] -= player_speed  # Move the background
+        bg_position['platform_position_X'] -= player_speed  # Move platforms
+        bg_position['triangle_position_X'] -= player_speed  # Move triangles
+        bg_position['end_rect_position_X'] -= player_speed  # Move end block
+    if player.x > screen_width - player_width - 5:  # Don't allow player to move out of screen with buffer
         player.x = screen_width - player_width - 5
     return bg_position
+
 
 
 def Player_Move_Left(player, player_speed, player_Postion, bg_position, level_length): #player move left
@@ -45,10 +46,11 @@ def Player_Move_Left(player, player_speed, player_Postion, bg_position, level_le
 
 # player wall collision
 def Player_Wall_Collision(player, ground_posY, player_height, player_jump_count):
-    if player.y >= ground_posY - player_height:
-        player.y = ground_posY - player_height
+    if player.y >= ground_posY - player_height:  # Check if player is on or past the ground
+        player.y = ground_posY - player_height  # Correct player's vertical position
         player_jump_count = 0  # Reset jump count when player hits the ground
     return player_jump_count
+
 
 
 # player platform collision
@@ -65,20 +67,19 @@ def Player_Platform_Collision(player, player_height, platforms, player_gravity, 
 
 
 # player triangle collision
-#ChatGPT __________
-def check_triangle_collision(player, player_mask, player_live, triangle_mask_positions, player_width):
-    for triangle in triangle_mask_positions:
-        triangle_mask = triangle['mask']  # Get the mask for the triangle
-        triangle_pos = triangle['pos']   # Get the position of the triangle
+def check_spike_collision(player_rect, player_mask, spike_mask_positions):
+    for spike_data in spike_mask_positions:
+        spike_mask = spike_data['mask']
+        spike_pos = spike_data['pos']
 
-        # Calculate the relative offset between the player and the triangle
-        offset = (player.x + (player_width/2) - triangle_pos[0], player.y + (player_width/2) - triangle_pos[1])
+        # Calculate the offset between the player and the spike
+        offset = (spike_pos[0] - player_rect.x, spike_pos[1] - player_rect.y)
 
-        # Check if the player's mask overlaps with the triangle's mask
-        if player_mask.overlap(triangle_mask, offset):
-            player_live -= 1  # Decrease player's lives
-            # Reset player position (modify based on your reset logic)
-    return player_live
+        # Check for mask overlap (collision)
+        if player_mask.overlap(spike_mask, offset):
+            return True  # Collision detected
+
+    return False  # No collision
 
 
 # player gravity
