@@ -12,18 +12,34 @@ os.environ['SDL_VIDEO_CENTERED'] = '1' # Center the window
 info = pygame.display.Info() # Get screen info
 screen_width, screen_height = info.current_w, info.current_h # set screen width and height
 
+
+
+
+#--------------------------------------------------------------------
+# Determine if the game is running from a bundled executable
+if getattr(sys, 'frozen', False):
+    # The app is running as a bundled executable
+    base_path = sys._MEIPASS
+else:
+    # The app is running in a normal Python environment
+    base_path = os.path.abspath("Python_Game_projekt")
+#--------------------------------------------------------------------
+
+
+
+
 # Background position
 # Platform position
 bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X' : 0, 'end_rect_position_X' : 0}  # Background and Platform position dictionary
 
 # Window setup
 DISPLAYSURF = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)  # fullscreen
-Main_Bg_Path = os.path.join("Python_Game_projekt", "Images", "Backgrounds", "MainBackground.png")  # Background Img
+Main_Bg_Path = os.path.join(base_path, "Images", "Backgrounds", "MainBackground.png")  # Background Img
 Main_Bg = pygame.image.load(Main_Bg_Path)  # Background load
 Main_Bg = pygame.transform.scale(Main_Bg, (screen_width, screen_height)) # Background scale fullscreen
 
 # Level End setup
-End_Bg_Path = os.path.join("Python_Game_projekt", "Images", "Backgrounds", "MainBackground_End.png")  # End Background Img
+End_Bg_Path = os.path.join(base_path, "Images", "Backgrounds", "MainBackground_End.png")  # End Background Img
 End_Bg = pygame.image.load(End_Bg_Path)  # End Background load
 End_Bg = pygame.transform.scale(End_Bg, (screen_width, screen_height)) # End Background scale fullscreen
 
@@ -39,8 +55,9 @@ player_height = int(screen_height * 0.0463 * scaling_factor)  # Player height
 
 
 # Player image
-player_image = pygame.image.load(os.path.join("Python_Game_projekt", "Images", "Charakters", "Guts.png"))  # player Img
-player_image = pygame.transform.scale(player_image, (int(player_width), int(player_height))) # player scale
+player_image_path = os.path.join(base_path, "Images", "Charakters", "Guts.png")  # player Img
+player_image = pygame.image.load(player_image_path)  # player Img
+player_image = pygame.transform.scale(player_image, (int(player_width), int(player_height)))  # player scale
 
 player_rect = player_image.get_rect(topleft=(100, player_posY))  # player position
 player_mask = pygame.mask.from_surface(player_image)  # player mask
@@ -66,9 +83,9 @@ platform = []
 triangles = []
 
 # Spickes
-Spickes_path = os.path.join("Python_Game_projekt", "Images", "World", "Spike2.png")  # Spickes Img
+Spickes_path = os.path.join(base_path, "Images", "World", "Spike2.png")  # Spickes Img
 Spickes_img = pygame.image.load(Spickes_path)  # Spickes load
-Spickes_img = pygame.transform.scale(Spickes_img, (screen_width * (50 / 1920), screen_height *(50 / 1080))) # Spickes scale
+Spickes_img = pygame.transform.scale(Spickes_img, (screen_width * (50 / 1920), screen_height * (50 / 1080)))  # Spickes scale
 
 
 
