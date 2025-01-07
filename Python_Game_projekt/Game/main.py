@@ -22,7 +22,7 @@ if getattr(sys, 'frozen', False):
     base_path = sys._MEIPASS
 else:
     # The app is running in a normal Python environment
-    base_path = os.path.abspath("Python_Game_projekt")
+    base_path = os.path.abspath("..")
 #--------------------------------------------------------------------
 
 
