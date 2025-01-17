@@ -1,4 +1,6 @@
 import pygame, os, sys
+
+from Griffith import *
 from Window import *
 from Player import *
 from Level import *
@@ -30,7 +32,7 @@ else:
 
 # Background position
 # Platform position
-bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X' : 0, 'end_rect_position_X' : 0}  # Background and Platform position dictionary
+bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X' : 0, 'end_rect_position_X' : 0, 'griffith_position_X' : 0}  # Background and Platform position dictionary
 
 # Window setup
 DISPLAYSURF = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)  # fullscreen
@@ -92,6 +94,36 @@ Spickes_img = pygame.transform.scale(Spickes_img, (screen_width * (50 / 1920), s
 
 
 
+# GRIFFITH!!!!!!!!!!------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+griffith_image_path = os.path.join(base_path, "Images", "Charakters", "Griffith.png")  # griffith Img
+griffith_image = pygame.image.load(griffith_image_path)  # griffith Img
+griffith_image = pygame.transform.scale(griffith_image, (int(player_width), int(player_height)))  # griffith scale
+
+
+griffith_posY = 150
+bg_pf_position['griffith_position_X'] =  (screen_width / 100 * 51)  # griffith position X
+griffith_posX = bg_pf_position['griffith_position_X']
+
+griffith_rect = griffith_image.get_rect(topleft=(griffith_posX, griffith_posY))  # griffith position
+griffith_mask = pygame.mask.from_surface(griffith_image)  # griffith mask
+griffith_mask_image = griffith_mask.to_surface()  # griffith mask image
+
+
+# Griffith movement parameters
+griffith_speed = 2  # Adjust speed as needed
+griffith_direction = 1  # 1 for right, -1 for left
+griffith_move_range = 200  # Range of movement
+
+# Store Griffith's original position to calculate movement range
+griffith_start_bg_position_X = bg_pf_position['griffith_position_X']
+
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 # Clock and Start Timer
 
 clock = pygame.time.Clock() # clock for timer and fps
@@ -116,6 +148,11 @@ while GameRun:
 
     # Draw player
     Draw_Player(player_rect, player_image, DISPLAYSURF, player_mask, mask_image)
+
+    bg_pf_position, griffith_direction = Update_Griffith(bg_pf_position, griffith_start_bg_position_X, griffith_speed, griffith_direction, griffith_move_range
+    )
+
+    Draw_Griffith(DISPLAYSURF, griffith_image, bg_pf_position, griffith_posY)
 
 
 
@@ -151,7 +188,7 @@ while GameRun:
         player_position = player_rect
         player_gravity = 0
         player_jump_count = 0
-        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0}
+        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length + (screen_width / 100 * 51)}
 
 
 
@@ -167,7 +204,7 @@ while GameRun:
         player_position = player_rect
         player_gravity = 0
         player_jump_count = 0
-        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0}
+        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length + (screen_width / 100 * 51)}
         start_time = pygame.time.get_ticks()  # Reset start time
 
 
@@ -211,7 +248,26 @@ while GameRun:
         player_position = player_rect
         player_gravity = 0
         player_jump_count = 0
-        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0}
+        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length + (screen_width / 100 * 51)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#-------------------------------------------------- TEST ---------------------------------------------------------------
+
+
+
+
 
 
 
