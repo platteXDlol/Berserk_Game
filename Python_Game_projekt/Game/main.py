@@ -24,6 +24,7 @@ if getattr(sys, 'frozen', False):
     base_path = sys._MEIPASS
 else:
     # The app is running in a normal Python environment
+    #base_path = os.path.abspath("Berserk_Game.\Python_Game_projekt")
     base_path = os.path.abspath("..")
 #--------------------------------------------------------------------
 
@@ -101,8 +102,8 @@ griffith_image = pygame.image.load(griffith_image_path)  # griffith Img
 griffith_image = pygame.transform.scale(griffith_image, (int(player_width), int(player_height)))  # griffith scale
 
 
-griffith_posY = 150
-bg_pf_position['griffith_position_X'] =  (screen_width / 100 * 51)  # griffith position X
+griffith_posY =   ground_posY - player_height
+bg_pf_position['griffith_position_X'] = level_length + (screen_width / 100 * 51)  # griffith position X
 griffith_posX = bg_pf_position['griffith_position_X']
 
 griffith_rect = griffith_image.get_rect(topleft=(griffith_posX, griffith_posY))  # griffith position
@@ -116,7 +117,10 @@ griffith_direction = 1  # 1 for right, -1 for left
 griffith_move_range = 200  # Range of movement
 
 # Store Griffith's original position to calculate movement range
-griffith_start_bg_position_X = bg_pf_position['griffith_position_X']
+griffith_initialized = False  # Track if starting position has been set
+griffith_active = False  # Initially inactive
+griffith_start_bg_position_X = bg_pf_position['griffith_position_X']  # Placeholder for initialization
+
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -149,7 +153,9 @@ while GameRun:
     # Draw player
     Draw_Player(player_rect, player_image, DISPLAYSURF, player_mask, mask_image)
 
-    bg_pf_position, griffith_direction = Update_Griffith(bg_pf_position, griffith_start_bg_position_X, griffith_speed, griffith_direction, griffith_move_range
+    bg_pf_position, griffith_direction, griffith_active, griffith_start_bg_position_X, griffith_initialized = Update_Griffith(
+        bg_pf_position, griffith_start_bg_position_X, griffith_speed, griffith_direction, griffith_move_range,
+        griffith_active, screen_width, griffith_initialized, level_length
     )
 
     Draw_Griffith(DISPLAYSURF, griffith_image, bg_pf_position, griffith_posY)
