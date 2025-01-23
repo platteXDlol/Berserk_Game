@@ -30,7 +30,7 @@ def Draw_Platforms(DISPLAYSURF, screen_height, screen_width, platform_position_X
         platform_position_X + (screen_width / 100 * 1250),  # 24000
         platform_position_X + (screen_width / 100 * 1302.08),  # 25000
         platform_position_X + (screen_width / 100 * 1354.17),  # 26000
-        platform_position_X + (screen_width / 100 * 1406.25),  # 27000
+
     ]
 
     # Platform Y positions: mixed heights for varying difficulty
@@ -61,7 +61,7 @@ def Draw_Platforms(DISPLAYSURF, screen_height, screen_width, platform_position_X
         screen_height / 100 * 60,  # Slightly higher platform
         screen_height / 100 * 65,  # Higher platform
         screen_height / 100 * 50,  # Last reachable platform
-        screen_height / 100 * 60,  # Slightly higher platform
+
     ]
 
     # Platform length: balanced length for each platform
@@ -92,7 +92,7 @@ def Draw_Platforms(DISPLAYSURF, screen_height, screen_width, platform_position_X
         screen_width / 100 * 15,  # Medium platform
         screen_width / 100 * 12,  # Shorter platform
         screen_width / 100 * 18,  # Final platform
-        screen_width / 100 * 15,  # Medium platform
+
     ]
 
     # Platform width remains constant

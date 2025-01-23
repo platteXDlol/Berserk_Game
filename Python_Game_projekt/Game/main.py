@@ -46,7 +46,7 @@ End_Bg_Path = os.path.join(base_path, "Images", "Backgrounds", "MainBackground_E
 End_Bg = pygame.image.load(End_Bg_Path)  # End Background load
 End_Bg = pygame.transform.scale(End_Bg, (screen_width, screen_height)) # End Background scale fullscreen
 
-level_length = Main_Bg.get_width() * 14  # Level length
+level_length = Main_Bg.get_width() * 15  # Level length
 
 
 # Player setup
@@ -106,7 +106,7 @@ griffith_image = pygame.transform.scale(griffith_image, (int(player_width), int(
 
 
 griffith_posY =   ground_posY - player_height
-bg_pf_position['griffith_position_X'] = level_length + (screen_width / 100 * 51)  # griffith position X
+bg_pf_position['griffith_position_X'] = level_length - screen_width + (screen_width / 100 * 51)  # griffith position X
 griffith_posX = bg_pf_position['griffith_position_X']
 griffith_width = griffith_image.get_width()  # griffith width
 
@@ -210,7 +210,7 @@ while GameRun:
         player_position = player_rect
         player_gravity = 0
         player_jump_count = 0
-        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length + (screen_width / 100 * 51)}
+        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length - screen_width + (screen_width / 100 * 51)}
         Griffith_live = True
 
 
@@ -227,7 +227,7 @@ while GameRun:
         player_position = player_rect
         player_gravity = 0
         player_jump_count = 0
-        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length + (screen_width / 100 * 51)}
+        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length - screen_width + (screen_width / 100 * 51)}
         Griffith_live = True
         start_time = pygame.time.get_ticks()  # Reset start time
 
@@ -275,7 +275,7 @@ while GameRun:
         player_position = player_rect
         player_gravity = 0
         player_jump_count = 0
-        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length + (screen_width / 100 * 51)}
+        bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length - screen_width + (screen_width / 100 * 51)}
         Griffith_live = True
 
 

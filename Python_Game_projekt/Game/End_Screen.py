@@ -8,7 +8,7 @@ def End_Block_Draw(DISPLAYSURF, screen_width, screen_height, level_length, end_r
     # Define the rectangle position and size
     rect_width = screen_width / 100 * 50  # 50% of screen width
     rect_height = screen_height / 100 * 20  # 20% of screen height
-    end_rect_position_X = end_rect_position_X + (level_length / 14 * 15) - (screen_width / 100 * 11.75)  # rect end of the level
+    end_rect_position_X = end_rect_position_X + (level_length / 15 * 16) - (screen_width / 100 * 11.75)  # rect end of the level
     rect_y = screen_height / 100 * 80   # Start at the top of the screen
     rect_color = (81, 81, 82)
 

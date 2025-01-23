@@ -22,6 +22,7 @@ def Player_Move_Right(player, player_speed, player_Position, bg_position, level_
         bg_position['triangle_position_X'] -= player_speed  # Move triangles
         bg_position['end_rect_position_X'] -= player_speed  # Move end block
         bg_position['griffith_position_X'] -= player_speed  # Move Griffith
+
     if player.x > screen_width - player_width - 5:  # Don't allow player to move out of screen with buffer
         player.x = screen_width - player_width - 5
     return bg_position
@@ -37,6 +38,7 @@ def Player_Move_Left(player, player_speed, player_Postion, bg_position, level_le
         bg_position['triangle_position_X'] += player_speed # triangle move
         bg_position['end_rect_position_X'] += player_speed # end block move
         bg_position['griffith_position_X'] += player_speed # Griffith move
+
     if player_Postion.x < 5: #dont move out screen
         player.x = 5
     return bg_position
