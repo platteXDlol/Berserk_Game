@@ -81,7 +81,7 @@ def Draw_Platforms(DISPLAYSURF, screen_height, screen_width, platform_position_X
         screen_width / 100 * 14,  # Medium-sized platform
         screen_width / 100 * 20,  # Larger platform
         screen_width / 100 * 14,  # Medium platform
-        screen_width / 100 * 12,  # Short platform
+        screen_width / 100 * 15,  # Short platform
         screen_width / 100 * 18,  # Larger platform
         screen_width / 100 * 15,  # Medium platform
         screen_width / 100 * 10,  # Shorter platform for timing

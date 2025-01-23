@@ -176,15 +176,13 @@ while GameRun:
 
 
 
-#---------------------------------- JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------------------------
 
     # player triangle collision
     spike_positions = Draw_Spikes(DISPLAYSURF, ground_posY, screen_width, screen_height, bg_pf_position['triangle_position_X'], Spickes_img)
     # Check if player collides with any spike
-    #if check_spike_collision(player_rect, player_mask, spike_positions):
-        #player_live = 0  # Handle player death or reset
+    if check_spike_collision(player_rect, player_mask, spike_positions):
+        player_live = 0  # Handle player death or reset
 
-#---------------------------------- JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------------------------
 
 
     #Player wall collision
@@ -280,24 +278,6 @@ while GameRun:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-#-------------------------------------------------- TEST ---------------------------------------------------------------
-
-
-    if key[pygame.K_LSHIFT]:
-        player_speed = 200
-        bg_pf_position = Player_Move_Right(player_rect, player_speed, player_position, bg_pf_position, level_length,
-                                           screen_width, player_width)
 
 
 
