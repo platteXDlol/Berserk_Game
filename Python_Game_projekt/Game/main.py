@@ -92,6 +92,9 @@ Spickes_img = pygame.transform.scale(Spickes_img, (screen_width * (50 / 1920), s
 
 
 
+coyote_timer = 0
+coyote_time_limit = 5  # Adjust based on desired forgiveness (e.g., 5 frames)
+
 
 
 
@@ -105,6 +108,7 @@ griffith_image = pygame.transform.scale(griffith_image, (int(player_width), int(
 griffith_posY =   ground_posY - player_height
 bg_pf_position['griffith_position_X'] = level_length + (screen_width / 100 * 51)  # griffith position X
 griffith_posX = bg_pf_position['griffith_position_X']
+griffith_width = griffith_image.get_width()  # griffith width
 
 griffith_rect = griffith_image.get_rect(topleft=(griffith_posX, griffith_posY))  # griffith position
 griffith_mask = pygame.mask.from_surface(griffith_image)  # griffith mask
@@ -117,6 +121,7 @@ griffith_direction = 1  # 1 for right, -1 for left
 griffith_move_range = 200  # Range of movement
 
 # Store Griffith's original position to calculate movement range
+Griffith_live = True
 griffith_initialized = False  # Track if starting position has been set
 griffith_active = False  # Initially inactive
 griffith_start_bg_position_X = bg_pf_position['griffith_position_X']  # Placeholder for initialization
@@ -158,17 +163,28 @@ while GameRun:
         griffith_active, screen_width, griffith_initialized, level_length
     )
 
-    Draw_Griffith(DISPLAYSURF, griffith_image, bg_pf_position, griffith_posY)
+    if check_kill_with_feet(player_rect, player_mask, bg_pf_position, griffith_mask, griffith_rect):
+        Griffith_live = False
+
+    Draw_Griffith(DISPLAYSURF, griffith_image, bg_pf_position, griffith_posY, Griffith_live)
+
+    if check_griffith_collision(player_rect, player_mask, bg_pf_position, griffith_mask, griffith_posY, Griffith_live):
+        player_live = 0
 
 
 
 
+
+
+#---------------------------------- JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------------------------
 
     # player triangle collision
     spike_positions = Draw_Spikes(DISPLAYSURF, ground_posY, screen_width, screen_height, bg_pf_position['triangle_position_X'], Spickes_img)
     # Check if player collides with any spike
-    if check_spike_collision(player_rect, player_mask, spike_positions):
-        player_live = 0  # Handle player death or reset
+    #if check_spike_collision(player_rect, player_mask, spike_positions):
+        #player_live = 0  # Handle player death or reset
+
+#---------------------------------- JUST FOR TESTING ------------------------------------------------------------------------------------------------------------------------------------------------
 
 
     #Player wall collision
@@ -179,7 +195,7 @@ while GameRun:
 
     #player platform collision
     platforms = Draw_Platforms(DISPLAYSURF, screen_height, screen_width, bg_pf_position['platform_position_X'])
-    player_gravity, player_jump_count = Player_Platform_Collision(player_rect, player_height, platforms, player_gravity, player_jump_count)
+    player_gravity, player_jump_count, coyote_timer = Player_Platform_Collisions(player_rect, player_mask, player_height, platforms, player_gravity, player_jump_count, coyote_timer, coyote_time_limit)
 
 
 
@@ -195,6 +211,7 @@ while GameRun:
         player_gravity = 0
         player_jump_count = 0
         bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length + (screen_width / 100 * 51)}
+        Griffith_live = True
 
 
 
@@ -211,6 +228,7 @@ while GameRun:
         player_gravity = 0
         player_jump_count = 0
         bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length + (screen_width / 100 * 51)}
+        Griffith_live = True
         start_time = pygame.time.get_ticks()  # Reset start time
 
 
@@ -244,9 +262,12 @@ while GameRun:
     if key[pygame.K_SPACE]:      #or key[pygame.K_UP]:
         if player_position.x > screen_width / 100 * 50: # end of game
             player_jump_count = 1
-        if player_jump_count == 0:  # If player is on the ground
-            player_gravity = jumpheight  # Jump height
-            player_jump_count = 1  # Increase jump count
+        if coyote_timer > 0 or player_jump_count == 0:  # On ground or within coyote time
+            player_gravity = jumpheight  # Apply jump
+            player_jump_count = 1  # Reset jump count
+            coyote_timer = 0  # Disable coyote time once used
+
+
 
 
     if key[pygame.K_r]:
@@ -255,6 +276,7 @@ while GameRun:
         player_gravity = 0
         player_jump_count = 0
         bg_pf_position = {'x': 0, 'y': 0, 'platform_position_X': 0, 'triangle_position_X': 0, 'end_rect_position_X': 0, 'griffith_position_X': level_length + (screen_width / 100 * 51)}
+        Griffith_live = True
 
 
 
@@ -271,6 +293,11 @@ while GameRun:
 
 #-------------------------------------------------- TEST ---------------------------------------------------------------
 
+
+    if key[pygame.K_LSHIFT]:
+        player_speed = 200
+        bg_pf_position = Player_Move_Right(player_rect, player_speed, player_position, bg_pf_position, level_length,
+                                           screen_width, player_width)
 
 
 

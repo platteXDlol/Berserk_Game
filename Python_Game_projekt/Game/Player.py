@@ -57,13 +57,46 @@ def Player_Wall_Collision(player, ground_posY, player_height, player_jump_count)
 
 # player platform collision
 def Player_Platform_Collision(player, player_height, platforms, player_gravity, player_jump_count):
-    for i, plat in enumerate(platforms):
+      for i, plat in enumerate(platforms):
         if plat.colliderect(player): # If player collides with a platform
             if player_gravity > 0:  # only if falling
                 player_jump_count = 0 # Reset jump count
                 player_gravity = 0 # Reset Gravity
                 player.y = plat.y - player_height # Teleport player to top of platform
-    return player_gravity, player_jump_count # Return both gravity and jump count
+        return player_gravity, player_jump_count # Return both gravity and jump count
+
+
+
+def Player_Platform_Collisions(player_rect, player_mask, player_height, platforms, player_gravity, player_jump_count, coyote_timer, coyote_time_limit):
+    on_ground = False
+    feet_threshold = int(player_height * 0.85)  # Bottom 15% of the player's height
+
+    for platform in platforms:
+        # Preliminary rect collision check
+        if player_rect.colliderect(platform):
+            offset = (platform.x - player_rect.x, platform.y - player_rect.y)
+            if player_mask.overlap_area(pygame.mask.Mask((platform.width, platform.height), fill=True), offset):
+                # Check if player is hitting the top of the platform (and within the feet threshold)
+                if player_rect.bottom > platform.y and player_rect.bottom - platform.y <= feet_threshold:
+                    if player_gravity > 0:  # Only consider falling
+                        player_jump_count = 0  # Reset jump count
+                        player_gravity = 0  # Reset gravity
+                        player_rect.y = platform.y - player_height  # Snap player to platform's top
+                        on_ground = True
+                    break  # Stop checking after collision is handled
+
+    # Update coyote timer
+    if on_ground:
+        coyote_timer = coyote_time_limit  # Reset coyote time
+    else:
+        coyote_timer = max(0, coyote_timer - 1)  # Decrease timer if in the air
+
+    return player_gravity, player_jump_count, coyote_timer
+
+
+
+
+
 
 
 
